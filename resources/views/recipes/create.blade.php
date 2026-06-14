@@ -24,28 +24,28 @@
             <p>Trage hier alle Informationen zu deinem Rezept ein.</p>
 
             <div>
-                <label for="title">Titel</label><br>
+                <label for="title">Titel</label>
                 <input class="input" type="text" id="title" name="title" required>
             </div>
 
             <br>
 
             <div>
-                <label for="description">Beschreibung</label><br>
+                <label for="description">Beschreibung</label>
                 <textarea class="input" id="description" name="description" rows="4"></textarea>
             </div>
 
             <br>
 
             <div>
-                <label for="duration_minutes">Dauer in Minuten</label><br>
+                <label for="duration_minutes">Dauer in Minuten</label>
                 <input class="input" type="number" id="duration_minutes" name="duration_minutes" min="0">
             </div>
 
             <br>
 
             <div>
-                <label for="difficulty">Aufwand / Schwierigkeit</label><br>
+                <label for="difficulty">Aufwand / Schwierigkeit</label>
                 <select class="input" id="difficulty" name="difficulty">
                     <option value="">Bitte auswählen</option>
                     <option value="easy">Einfach</option>
@@ -57,7 +57,7 @@
             <br>
 
             <div>
-                <label for="price_level">Preisschätzung</label><br>
+                <label for="price_level">Preisschätzung</label>
                 <input class="input" type="text" id="price_level" name="price_level"
                     placeholder="z.B. ca. 8 € oder günstig" value="{{ old('price_level') }}">
             </div>
@@ -65,21 +65,21 @@
             <br>
 
             <div>
-                <label for="servings">Menge / Portionen</label><br>
+                <label for="servings">Menge / Portionen</label>
                 <input class="input" type="number" id="servings" name="servings" min="1">
             </div>
 
             <br>
 
             <div>
-                <label for="kcal">Kcal optional</label><br>
+                <label for="kcal">Kcal optional</label>
                 <input class="input" type="number" id="kcal" name="kcal" min="0">
             </div>
 
             <br>
 
             <div>
-                <label for="diet_type">Ernährungsart</label><br>
+                <label for="diet_type">Ernährungsart</label>
                 <select class="input" id="diet_type" name="diet_type">
                     <option value="none">Normal</option>
                     <option value="vegetarian">Vegetarisch</option>
@@ -90,7 +90,7 @@
             <br>
 
             <div>
-                <label for="meal_type">Kategorie</label><br>
+                <label for="meal_type">Kategorie</label>
                 <select class="input" id="meal_type" name="meal_type">
                     <option value="">Bitte auswählen</option>
                     <option value="Frühstück">Frühstück</option>
@@ -112,8 +112,8 @@
 
                 <div id="ingredients-wrapper">
                     <div class="ingredients-row">
-                        <input class="input ingredient-name" type="text" name="ingredients[0][name]"
-                            placeholder="Zutat">
+                        <input class="input ingredient-name" type="text" name="ingredients[0][name]" placeholder="Zutat"
+                            list="nutrition-items-list">
 
                         <input class="input" type="text" name="ingredients[0][amount]" placeholder="Menge">
 
@@ -137,28 +137,28 @@
             <br>
 
             <div>
-                <label for="instructions">Zubereitung</label><br>
+                <label for="instructions">Zubereitung</label>
                 <textarea id="instructions" name="instructions" rows="8"></textarea>
             </div>
 
             <br>
 
             <div>
-                <label for="notes">Notizen</label><br>
+                <label for="notes">Notizen</label>
                 <textarea id="notes" name="notes" rows="4"></textarea>
             </div>
 
             <br>
 
             <div>
-                <label for="source_url">Quelle / Link optional</label><br>
+                <label for="source_url">Quelle / Link optional</label>
                 <input type="url" id="source_url" name="source_url">
             </div>
 
             <br>
 
             <div>
-                <label for="photo">Foto hinzufügen</label><br>
+                <label for="photo">Foto hinzufügen</label>
                 <input type="file" id="photo" name="photo" accept="image/*">
             </div>
 
@@ -192,24 +192,25 @@
             row.classList.add('ingredients-row');
 
             row.innerHTML = `
-                <input class="input ingredient-name"
-                       type="text"
-                       name="ingredients[${index}][name]"
-                       placeholder="Zutat">
-    
-                <input class="input"
-                       type="text"
-                       name="ingredients[${index}][amount]"
-                       placeholder="Menge">
-    
-                <select class="input" name="ingredients[${index}][unit]">
-                    ${units.map(unit => `
-                        <option value="${unit}">
-                            ${unit === '' ? 'Einheit' : unit}
-                        </option>
-                    `).join('')}
-                </select>
-            `;
+        <input class="input ingredient-name"
+               type="text"
+               name="ingredients[${index}][name]"
+               placeholder="Zutat"
+               list="nutrition-items-list">
+
+        <input class="input"
+               type="text"
+               name="ingredients[${index}][amount]"
+               placeholder="Menge">
+
+        <select class="input" name="ingredients[${index}][unit]">
+            ${units.map(unit => `
+                <option value="${unit}">
+                    ${unit === '' ? 'Einheit' : unit}
+                </option>
+            `).join('')}
+        </select>
+    `;
 
             return row;
         }

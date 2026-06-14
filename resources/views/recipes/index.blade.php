@@ -101,6 +101,10 @@
                                         {{ $recipe->meal_type }}
                                     </span>
                                 @endif
+
+                                <span class="badge badge-user">
+                                    👤 {{ $recipe->user->name }}
+                                </span>
                             </div>
                         </div>
 

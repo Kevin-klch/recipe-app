@@ -14,6 +14,11 @@
     <main class="container">
         <a class="back-link" href="{{ route('recipes.index') }}">← Alle Rezepte</a>
 
+        <p>
+            Erstellt von:
+            <strong>{{ $recipe->user->name }}</strong>
+        </p>
+
         @if(session('success'))
             <div class="success-message">
                 {{ session('success') }}
@@ -55,13 +60,55 @@
 
                 <div class="card">
                     <span>Kcal</span>
-                    <strong>{{ $recipe->kcal ?? '-' }}</strong>
+                    <strong>{{ $recipe->kcal ?? 0 }} kcal</strong>
                 </div>
 
                 <div class="card">
                     <span>Ernährung</span>
                     <strong>{{ $recipe->diet_type ?? '-' }}</strong>
                 </div>
+            </section>
+
+            <section class="nutrition-card">
+
+                <div class="nutrition-header">
+                    <span>Nährwerte pro Portion</span>
+                </div>
+
+                @php
+                    $servings = $recipe->servings ?: 1;
+                @endphp
+
+                <div class="nutrition-grid">
+
+                    <div class="nutrition-item">
+                        <span class="nutrition-label">🔥 Kalorien</span>
+                        <strong>{{ round($recipe->total_kcal / $servings) }} kcal</strong>
+                    </div>
+
+                    <div class="nutrition-item">
+                        <span class="nutrition-label">💪 Protein</span>
+                        <strong>{{ round($recipe->total_protein / $servings, 1) }} g</strong>
+                    </div>
+
+                    <div class="nutrition-item">
+                        <span class="nutrition-label">🍞 Kohlenhydrate</span>
+                        <strong>{{ round($recipe->total_carbs / $servings, 1) }} g</strong>
+                    </div>
+
+                    <div class="nutrition-item">
+                        <span class="nutrition-label">🥑 Fett</span>
+                        <strong>{{ round($recipe->total_fat / $servings, 1) }} g</strong>
+                    </div>
+
+                </div>
+
+                @if($recipe->servings)
+                    <p class="nutrition-note">
+                        Berechnet für {{ $recipe->servings }} Portionen.
+                    </p>
+                @endif
+
             </section>
 
             @if($recipe->photo_path)
@@ -129,12 +176,12 @@
             <a href="{{ route('recipes.edit', $recipe) }}" class="btn">
                 Rezept bearbeiten
             </a>
-    
+
             <form action="{{ route('recipes.destroy', $recipe) }}" method="POST"
                 onsubmit="return confirm('Möchtest du dieses Rezept wirklich löschen?')">
                 @csrf
                 @method('DELETE')
-    
+
                 <button type="submit" class="btn btn-danger">
                     Rezept löschen
                 </button>

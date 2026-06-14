@@ -7,13 +7,79 @@
     <title>Meine Rezepte</title>
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+
+    <script>
+        function openInfoModal() {
+            document.getElementById('info-modal').classList.add('show');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.remove('show');
+        }
+
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('info-modal');
+
+            if (event.target === modal) {
+                closeInfoModal();
+            }
+        });
+    </script>
 </head>
 
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Informationen</h2>
+
+            <button class="modal-close" onclick="closeInfoModal()">
+                ×
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p>
+                Willkommen bei unserer Rezeptsammlung.
+            </p>
+
+            <ul>
+                <li>Eigene Rezepte können erstellt werden.</li>
+                <li>Bitte nur passende Bilder hochladen.</li>
+                <li>Jeder Nutzer ist für seine Rezepte selbst verantwortlich.</li>
+                <li>Rezepte können jederzeit bearbeitet werden.</li>
+                <li>Bei Fragen einfach Kevin kontaktieren.</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
 <body>
+
     <main class="container">
+        <div class="top-bar">
+            <button class="info-button" onclick="openInfoModal()">
+                i
+            </button>
+
+            <div class="hero-top-right">
+                <span class="user-badge">
+                    👤 {{ auth()->user()->name }}
+                </span>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <section class="hero">
             <div class="header">
-                <span>Meine Rezepte</span>
+                <span>Startseite</span>
             </div>
 
             <div class="hero-actions">
@@ -26,9 +92,9 @@
             <h2>Zuletzt hinzugefügt</h2>
 
             @if ($recipes->isEmpty())
-            <div class="card empty-card">
-                <p>Noch keine Rezepte vorhanden.</p>
-            </div>
+                <div class="card empty-card">
+                    <p>Noch keine Rezepte vorhanden.</p>
+                </div>
             @else
                 <div class="recipe-grid">
                     @foreach ($recipes as $recipe)
@@ -63,8 +129,11 @@
                                                 {{ $recipe->servings }} Pers.
                                             </span>
                                         @endif
-                                    </div>
 
+                                        <span class="badge badge-user">
+                                            👤 {{ $recipe->user->name }}
+                                        </span>
+                                    </div>
                                 </div>
 
                             </a>

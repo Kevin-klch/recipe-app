@@ -18,8 +18,7 @@
 }
 
 .ingredients-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    display: flex;
     gap: 12px;
     margin-bottom: 12px;
 }
@@ -29,13 +28,6 @@
     justify-content: space-between;
     gap: 14px;
     margin-top: 26px;
-}
-
-.ingredients-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
 }
 
 @media (max-width: 760px) {

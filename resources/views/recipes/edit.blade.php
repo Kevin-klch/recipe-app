@@ -106,6 +106,99 @@
                 </div>
 
                 <div class="form-group full">
+                    <label>Zutaten</label>
+                
+                    <div id="ingredients-wrapper">
+                
+                        @foreach($recipe->ingredients as $index => $ingredient)
+                            <div class="ingredients-row">
+                
+                                <input
+                                    class="input ingredient-name"
+                                    type="text"
+                                    name="ingredients[{{ $index }}][name]"
+                                    value="{{ old("ingredients.$index.name", $ingredient->name) }}"
+                                    placeholder="Zutat">
+                
+                                <input
+                                    class="input"
+                                    type="text"
+                                    name="ingredients[{{ $index }}][amount]"
+                                    value="{{ old("ingredients.$index.amount", $ingredient->amount) }}"
+                                    placeholder="Menge">
+                
+                                <select
+                                    class="input"
+                                    name="ingredients[{{ $index }}][unit]">
+                
+                                    <option value="">Einheit</option>
+                
+                                    @foreach([
+                                        'g',
+                                        'kg',
+                                        'ml',
+                                        'l',
+                                        'TL',
+                                        'EL',
+                                        'Prise',
+                                        'Stück',
+                                        'Dose',
+                                        'Packung'
+                                    ] as $unit)
+                
+                                        <option
+                                            value="{{ $unit }}"
+                                            @selected(old("ingredients.$index.unit", $ingredient->unit) === $unit)>
+                                            {{ $unit }}
+                                        </option>
+                
+                                    @endforeach
+                
+                                </select>
+                
+                            </div>
+                        @endforeach
+                
+                        {{-- Leere Zeile für neue Zutaten --}}
+                        <div class="ingredients-row">
+                
+                            <input
+                                class="input ingredient-name"
+                                type="text"
+                                name="ingredients[{{ $recipe->ingredients->count() }}][name]"
+                                placeholder="Zutat">
+                
+                            <input
+                                class="input"
+                                type="text"
+                                name="ingredients[{{ $recipe->ingredients->count() }}][amount]"
+                                placeholder="Menge">
+                
+                            <select
+                                class="input"
+                                name="ingredients[{{ $recipe->ingredients->count() }}][unit]">
+                
+                                <option value="">Einheit</option>
+                
+                                <option value="g">g</option>
+                                <option value="kg">kg</option>
+                                <option value="ml">ml</option>
+                                <option value="l">l</option>
+                                <option value="TL">TL</option>
+                                <option value="EL">EL</option>
+                                <option value="Prise">Prise</option>
+                                <option value="Stück">Stück</option>
+                                <option value="Dose">Dose</option>
+                                <option value="Packung">Packung</option>
+                
+                            </select>
+                
+                        </div>
+                
+                    </div>
+                </div>
+
+                <div class="form-group full">
                     <label for="instructions">Zubereitung</label>
                     <textarea class="input" id="instructions" name="instructions"
                         rows="8">{{ old('instructions', $recipe->instructions) }}</textarea>
