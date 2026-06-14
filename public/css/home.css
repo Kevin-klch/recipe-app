@@ -1,0 +1,165 @@
+.hero {
+    margin-bottom: 34px;
+    padding: 28px;
+    border-radius: 32px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 193, 7, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #292929,
+            #1f1f1f
+        );
+
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.hero p {
+    margin-bottom: 24px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hero-header{
+    font-size: 50px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+/* ========================= */
+/* Rezeptliste */
+/* ========================= */
+
+.recipe-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.recipe-card {
+    display: flex;
+    gap: 20px;
+
+    overflow: hidden;
+    transition: .2s ease;
+
+    padding: 16px;
+}
+
+.recipe-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+/* ========================= */
+/* Bild */
+/* ========================= */
+
+.recipe-image {
+    width: 140px;
+    height: 140px;
+
+    min-width: 140px;
+
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+}
+
+/* ========================= */
+/* Inhalt */
+/* ========================= */
+
+.recipe-content {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.recipe-content-title{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.recipe-content h3 {
+    margin-bottom: 8px;
+}
+
+.recipe-content p {
+    margin-bottom: 12px;
+    min-height: auto;
+}
+
+/* ========================= */
+/* Meta Infos */
+/* ========================= */
+
+.recipe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ========================= */
+/* Mobile */
+/* ========================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: calc(100% - 24px);
+        padding-top: 18px;
+    }
+
+    .hero {
+        padding: 24px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .recipe-card {
+        flex-direction: column;
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 220px;
+        min-width: unset;
+    }
+
+    .recipe-content {
+        padding-top: 4px;
+    }
+}
