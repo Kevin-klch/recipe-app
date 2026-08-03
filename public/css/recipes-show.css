@@ -1,144 +1,419 @@
-.detail-header {
-    padding: 30px;
-    border-radius: 32px;
-    background:
-        linear-gradient(135deg, rgba(255, 193, 7, .14), transparent 40%),
-        linear-gradient(180deg, #292929, #1f1f1f);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    margin-bottom: 22px;
-}
+/* =========================================================================
+   Rezept-Detailseite – neues Design (siehe design2)
+   Mobile first: Hero, ueberlappende Titelkarte, Zutaten, Zubereitung.
+   Ab 900px zweispaltig (Zubereitung links, Zutaten/Naehrwerte rechts),
+   die DOM-Reihenfolge bleibt dabei die mobile aus dem Entwurf.
+   ========================================================================= */
 
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-    gap: 14px;
-    margin-bottom: 22px;
-}
+/* ---------- Hero ---------- */
 
-.info-grid .card {
-    padding: 18px;
-    color: var(--muted);
-}
-
-.info-grid strong {
-    display: block;
-    margin-top: 8px;
-    color: var(--primary);
-    font-size: 1.15rem;
-}
-
-.content-section {
-    padding: 22px;
-    margin-bottom: 18px;
-}
-
-.content-section p {
-    white-space: pre-line;
-}
-
-.recipe-actions {
-    display: flex;
-    gap: 12px;
-    margin: 24px 0;
-    flex-wrap: wrap;
-}
-
-.btn-danger {
-    background: #dc2626;
-    color: white;
-    font-size: 16px;
-}
-
-.btn-danger:hover {
-    background: #b91c1c;
-}
-
-.recipe-photo {
+.detail-hero {
+    position: relative;
+    height: min(50vh, 400px);
+    min-height: 240px;
     overflow: hidden;
-    border-radius: 32px;
-    margin-bottom: 22px;
-    max-height: 420px;
+    background: var(--hero-fallback);
 }
 
-.recipe-title {
-    font-size: 50px;
-    font-weight: 600;
-}
-
-.recipe-header {
-    display: flex;
-    flex-direction: column;
-}
-
-.recipe-photo img {
+.detail-hero img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.ingredient-list {
-    list-style: none;
-    padding: 0;
+/* Ohne Foto braucht der Hero weniger Hoehe */
+.detail-hero-no-photo {
+    height: 200px;
+    min-height: 0;
+}
+
+/* Platzhalter, wenn kein Foto hinterlegt ist */
+.detail-hero-empty {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-size: clamp(3rem, 14vw, 5.5rem);
+    opacity: .72;
+}
+
+/* Verlauf oben, damit die Buttons auf hellen Fotos lesbar bleiben */
+.detail-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 120px;
+    background: linear-gradient(rgba(0, 0, 0, .28), transparent);
+    pointer-events: none;
+}
+
+.hero-bar {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+
+    width: min(1000px, 100%);
+    margin: 0 auto;
+    padding: 0 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+
+    display: inline-grid;
+    place-items: center;
+
+    background: var(--chip-bg);
+    color: var(--chip-fg);
+
+    border: 0;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+    transition: transform .18s ease, opacity .18s ease;
+}
+
+.hero-btn:hover {
+    opacity: .85;
+    transform: translateY(-1px);
+}
+
+.hero-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ---------- Titelkarte, ueberlappt den Hero ---------- */
+
+.detail-main {
+    padding-top: 0;
+}
+
+.detail-card {
+    position: relative;
+    z-index: 1;
+
+    margin-top: -36px;
+    margin-bottom: 18px;
+    padding: 24px 20px;
+
+    text-align: center;
+}
+
+.detail-card .success-message {
+    text-align: left;
+}
+
+.detail-badge {
+    margin: 0 auto 12px;
+}
+
+.detail-title {
     margin: 0;
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    hyphens: auto;
+}
+
+.detail-subtitle {
+    margin: 8px 0 0;
+    font-size: .9rem;
+}
+
+.detail-description {
+    max-width: 62ch;
+    margin: 16px auto 0;
+}
+
+/* ---------- Kennzahlen-Reihe ---------- */
+
+.stat-row {
+    display: flex;
+    align-items: stretch;
+    margin-top: 20px;
+}
+
+.stat {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    padding: 4px 6px;
+}
+
+.stat + .stat {
+    border-left: 1px solid var(--border);
+}
+
+.stat-icon {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    border: 1.6px solid var(--primary);
+    color: var(--primary);
+}
+
+.stat-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.stat-text {
+    min-width: 0;
+    text-align: left;
+}
+
+.stat-value {
+    display: block;
+    font-weight: 700;
+    font-size: .95rem;
+    white-space: nowrap;
+}
+
+.stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: .72rem;
+    line-height: 1.3;
+}
+
+/* ---------- Weitere Angaben als Pills ---------- */
+
+.detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+.detail-tags .badge {
+    font-size: .8rem;
+}
+
+.detail-tags .badge strong {
+    color: var(--text);
+    margin-left: 5px;
+}
+
+/* ---------- Layout der Inhaltsbloecke ---------- */
+
+.detail-grid {
+    display: grid;
+    gap: 18px;
+    align-items: start;
+}
+
+.detail-col {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    min-width: 0;
+}
+
+.panel {
+    padding: 22px 20px;
+}
+
+.panel h2 {
+    margin: 0 0 16px;
+    font-size: 1.15rem;
+}
+
+/* ---------- Zutaten als Kacheln ---------- */
+
+.ingredients {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 14px;
+}
+
+.ingredient {
+    min-width: 0;
+    text-align: center;
+}
+
+.ingredient-thumb {
+    display: grid;
+    place-items: center;
+
+    aspect-ratio: 1;
+    width: 100%;
+    border-radius: 18px;
+
+    background: var(--tile, var(--card-light));
+    font-size: clamp(1.5rem, 6vw, 1.9rem);
+    line-height: 1;
+}
+
+.ingredient-title {
+    display: block;
+    margin-top: 8px;
+
+    font-size: .8rem;
+    font-weight: 600;
+    line-height: 1.25;
+
+    /* Deutsche Trennung statt harter Umbrueche mitten im Wort
+       ("Knoblauch-zehe" statt "Knoblauchzeh|e"). */
+    hyphens: auto;
+    overflow-wrap: break-word;
+}
+
+.ingredient-amount {
+    display: block;
+    margin-top: 2px;
+
+    color: var(--muted);
+    font-size: .72rem;
+}
+
+/* ---------- Zubereitung als Schritte ---------- */
+
+.steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
     display: grid;
     gap: 12px;
 }
 
-.ingredient-list li {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
+.step {
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: var(--card-light);
+    border: 1px solid var(--border);
 }
 
-.ingredient-list span {
-    color: var(--primary);
-    font-weight: 800;
-}
+.step-label {
+    display: block;
+    margin-bottom: 6px;
 
-.ingredients-table {
-    margin-top: 20px;
-}
-
-.ingredient-row {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-
-    gap: 20px;
-
-    align-items: center;
-
-    padding: 18px 0;
-
-    border-bottom: 1px solid var(--border);
-}
-
-.ingredient-row:last-child {
-    border-bottom: none;
-}
-
-.ingredient-amount {
-    color: var(--primary);
-
+    color: var(--accent-text);
     font-weight: 700;
-
-    text-align: right;
+    font-size: .82rem;
 }
 
-.ingredient-name {
-    font-weight: 500;
+.step p {
+    margin: 0;
+    color: var(--text);
+    white-space: pre-line;
 }
 
-@media (max-width: 640px) {
-    .detail-header {
-        padding: 24px;
+/* ---------- Naehrwerte ---------- */
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.nutrition-item {
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--card-light);
+    border: 1px solid var(--border);
+}
+
+.nutrition-label {
+    display: block;
+    margin-bottom: 4px;
+
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.nutrition-item strong {
+    font-size: 1.25rem;
+}
+
+.nutrition-note {
+    margin: 14px 0 0;
+    font-size: .78rem;
+}
+
+/* ---------- Notizen, Quelle, Aktionen ---------- */
+
+.panel-text {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.source-link {
+    color: var(--accent-text);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.source-link:hover {
+    text-decoration: underline;
+}
+
+.recipe-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin: 22px 0 0;
+}
+
+.recipe-actions .btn {
+    padding: 12px 20px;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* ---------- Mobil ---------- */
+
+@media (max-width: 560px) {
+    .stat-row {
+        gap: 2px;
     }
 
-    .info-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .stat {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+
+    .stat-text {
+        text-align: center;
     }
 
     .recipe-actions {
@@ -150,71 +425,51 @@
     .recipe-actions button {
         width: 100%;
     }
+}
 
-    .ingredient-row {
-        grid-template-columns: 90px 1fr;
-        gap: 12px;
+/* ---------- Desktop ---------- */
+
+@media (min-width: 900px) {
+    .detail-hero {
+        height: 420px;
     }
-}
 
-.nutrition-card {
-    margin: 24px 0;
-    padding: 24px;
+    /* muss nach .detail-hero stehen, gleiche Spezifitaet */
+    .detail-hero-no-photo {
+        height: 260px;
+    }
 
-    border-radius: 28px;
+    .detail-card {
+        margin-top: -52px;
+        padding: 32px;
+    }
 
-    background:
-        linear-gradient(135deg,
-            rgba(255, 193, 7, 0.08),
-            transparent 40%),
-        var(--card);
+    .detail-title {
+        font-size: 2.4rem;
+    }
 
-    border: 1px solid var(--border);
-}
+    /* Zubereitung links, Zutaten/Naehrwerte rechts – die DOM-Reihenfolge
+       bleibt mobil (Zutaten zuerst), deshalb explizite Platzierung. */
+    .detail-grid {
+        grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+        gap: 20px;
+    }
 
-.nutrition-header {
-    margin-bottom: 20px;
+    .detail-col-main {
+        grid-column: 1;
+        grid-row: 1;
+    }
 
-    font-size: 20px;
-    font-weight: 700;
-}
+    .detail-col-side {
+        grid-column: 2;
+        grid-row: 1;
+    }
 
-.nutrition-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-}
+    .panel {
+        padding: 26px;
+    }
 
-.nutrition-item {
-    padding: 18px;
-
-    border-radius: 18px;
-
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.nutrition-label {
-    display: block;
-
-    margin-bottom: 6px;
-
-    color: var(--muted);
-    font-size: 14px;
-}
-
-.nutrition-item strong {
-    font-size: 24px;
-}
-
-.nutrition-note {
-    margin-top: 16px;
-    color: var(--muted);
-    font-size: 14px;
-}
-
-@media (max-width: 800px) {
-    .nutrition-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .ingredients {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
     }
 }

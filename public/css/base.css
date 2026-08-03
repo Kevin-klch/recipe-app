@@ -1,17 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap');
 
+/* Dunkles Theme = Standard. Der helle Modus ueberschreibt diese Tokens
+   weiter unten in .theme-light. */
 :root {
     --bg: #181818;
     --bg-soft: #202020;
+    --bg-glow: #2b2b2b;
     --card: #242424;
     --card-light: #2d2d2d;
     --text: #f5f5f5;
     --muted: #9b9b9b;
     --primary: #ffc107;
     --primary-dark: #d99c00;
+    --accent-text: #ffc107;
     --border: rgba(255, 255, 255, 0.06);
     --radius: 24px;
     --shadow: 0 18px 40px rgba(0, 0, 0, .35);
+
+    /* Runde Buttons auf Bildern (Zurueck, Bearbeiten, Theme-Switch) */
+    --chip-bg: rgba(24, 24, 24, .82);
+    --chip-fg: #f5f5f5;
+
+    /* Hero-Verlauf, wenn kein Foto hinterlegt ist */
+    --hero-fallback: linear-gradient(155deg, #4a3718, #1f1f1f);
+
+    /* Getoente Flaechen fuer die Zutaten-Kacheln, rotierend */
+    --tile-1: #3a2b2b;
+    --tile-2: #393526;
+    --tile-3: #26362b;
+    --tile-4: #3a3025;
+    --tile-5: #272d3a;
+    --tile-6: #332a3a;
 }
 
 * {
@@ -26,7 +45,7 @@ body {
     font-family: "Plus Jakarta Sans", system-ui, -apple-system,
         BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     background:
-        radial-gradient(circle at top left, #2b2b2b, transparent 35%),
+        radial-gradient(circle at top left, var(--bg-glow), transparent 35%),
         var(--bg);
     color: var(--text);
 }
@@ -385,4 +404,109 @@ label {
 
     font-size: 28px;
     cursor: pointer;
+}
+
+/* =========================================================================
+   Heller Modus (warmes Schema)
+   =========================================================================
+   Klasse sitzt auf <html>, gesetzt von partials/theme-init vor dem ersten
+   Paint und umgeschaltet von partials/theme-toggle. Dunkel ist der
+   Standard, hier werden nur die Tokens umdefiniert – weil die Utilities
+   (.card, .btn, .badge, .input …) durchgehend var(--…) verwenden, ziehen
+   sie automatisch mit. Ueberschrieben wird unten nur, was Farben hart
+   codiert hat.
+   ========================================================================= */
+
+.theme-light {
+    --bg: #faf0e4;
+    --bg-soft: #f5e3ce;
+    --bg-glow: #fff8ef;
+    --card: #ffffff;
+    --card-light: #fff6eb;
+    --text: #241c14;
+    --muted: #8c7e70;
+    --primary: #f0a03c;
+    --primary-dark: #d9862a;
+    --accent-text: #d9862a;
+    --border: rgba(36, 28, 20, .09);
+    --shadow: 0 18px 40px rgba(184, 124, 54, .14);
+
+    --chip-bg: rgba(255, 255, 255, .92);
+    --chip-fg: #241c14;
+
+    --hero-fallback: linear-gradient(155deg, #ffd9a8, #f0a03c);
+
+    /* Pastelltoene, rotierend fuer die Zutaten-Kacheln */
+    --tile-1: #ffe7e2;
+    --tile-2: #fff3d6;
+    --tile-3: #e4f5e2;
+    --tile-4: #ffecd9;
+    --tile-5: #e8eefb;
+    --tile-6: #f3e8fb;
+}
+
+.theme-light .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+/* .badge erbt --muted, was auf hellem Grund zu blass wird */
+.theme-light .badge {
+    color: #6b5d50;
+    font-weight: 600;
+}
+
+.theme-light .badge-user {
+    background: linear-gradient(135deg,
+            rgba(240, 160, 60, .20),
+            rgba(240, 160, 60, .08));
+
+    border: 1px solid rgba(240, 160, 60, .30);
+    color: var(--primary-dark);
+}
+
+/* Formularfelder haben im dunklen Theme eine feste Hintergrundfarbe */
+.theme-light .input,
+.theme-light select,
+.theme-light textarea {
+    background: #fffdfa;
+    color: var(--text);
+}
+
+.theme-light .success-message {
+    background: rgba(22, 163, 74, .10);
+    border: 1px solid rgba(22, 163, 74, .22);
+    color: #15803d;
+}
+
+.theme-light .error-message {
+    background: rgba(220, 38, 38, .08);
+    border: 1px solid rgba(220, 38, 38, .20);
+    color: #b91c1c;
+}
+
+/* =========================================================================
+   Theme-Switch
+   =========================================================================
+   Zeigt das Icon des Modus, in den geschaltet wird: im Dunkeln die Sonne,
+   im Hellen den Mond. Die umgebende Flaeche kommt von der jeweiligen
+   Seite (auf der Rezeptseite .hero-btn).
+   ========================================================================= */
+
+.theme-toggle {
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+}
+
+.theme-toggle .icon-moon {
+    display: none;
+}
+
+.theme-light .theme-toggle .icon-sun {
+    display: none;
+}
+
+.theme-light .theme-toggle .icon-moon {
+    display: block;
 }
