@@ -3,9 +3,6 @@
 
     $servings = $recipe->servings ?: 1;
 
-    $difficultyLabels = ['easy' => 'Einfach', 'medium' => 'Mittel', 'hard' => 'Aufwendig'];
-    $dietLabels = ['none' => 'Normal', 'vegetarian' => 'Vegetarisch', 'vegan' => 'Vegan'];
-
     // Zubereitung an Leerzeilen in einzelne Schritte trennen.
     $steps = $recipe->instructions
         ? array_values(array_filter(
@@ -61,121 +58,47 @@
     @include('partials.theme-init')
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/recipes-show.css') }}">
 </head>
 
 <body>
 
-    <header class="detail-hero{{ $recipe->photo_path ? '' : ' detail-hero-no-photo' }}">
-        @if($recipe->photo_path)
-            <img src="{{ asset('storage/'.$recipe->photo_path) }}" alt="{{ $recipe->title }}">
-        @else
-            <div class="detail-hero-empty" aria-hidden="true">🍽️</div>
+    <x-page-hero :back-url="route('recipes.index')" back-label="Zurück zu allen Rezepten"
+        :photo="$recipe->photo_path ? asset('storage/'.$recipe->photo_path) : null" :alt="$recipe->title">
+
+        @if($canManage)
+            <x-slot:actions>
+                <a class="hero-btn" href="{{ route('recipes.edit', $recipe) }}" aria-label="Rezept bearbeiten">
+                    @include('partials.icons.pencil')
+                </a>
+            </x-slot:actions>
         @endif
+    </x-page-hero>
 
-        <div class="hero-bar">
-            <a class="hero-btn" href="{{ route('recipes.index') }}" aria-label="Zurück zu allen Rezepten">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 5l-7 7 7 7" />
-                </svg>
-            </a>
+    <main class="container page-main">
 
-            <div class="hero-bar-right">
-                @include('partials.theme-toggle')
-
-                @if($canManage)
-                    <a class="hero-btn" href="{{ route('recipes.edit', $recipe) }}" aria-label="Rezept bearbeiten">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z" />
-                            <path d="M14.5 5.5 18.5 9.5" />
-                        </svg>
-                    </a>
-                @endif
-            </div>
-        </div>
-    </header>
-
-    <main class="container detail-main">
-
-        <section class="card detail-card">
-
-            @if(session('success'))
-                <div class="success-message">{{ session('success') }}</div>
-            @endif
-
-            @if($recipe->meal_type)
-                <span class="badge detail-badge">{{ $recipe->meal_type }}</span>
-            @endif
-
-            <h1 class="detail-title">{{ $recipe->title }}</h1>
-
-            <p class="detail-subtitle">
-                {{ $recipe->ingredients->count() }}
-                {{ $recipe->ingredients->count() === 1 ? 'Zutat' : 'Zutaten' }}
-                · von {{ $recipe->user->name ?? 'Unbekannt' }}
-            </p>
+        <x-page-card :title="$recipe->title" :badge="$recipe->meal_type"
+            :subtitle="$recipe->ingredients->count().' '.($recipe->ingredients->count() === 1 ? 'Zutat' : 'Zutaten').' · von '.($recipe->user->name ?? 'Unbekannt')">
 
             <div class="stat-row">
-                <div class="stat">
-                    <span class="stat-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="9" />
-                            <path d="M12 7v5l3.5 2" />
-                        </svg>
-                    </span>
-                    <span class="stat-text">
-                        <span class="stat-value">
-                            {{ $recipe->duration_minutes ? $recipe->duration_minutes.' Min' : '–' }}
-                        </span>
-                        <span class="stat-label">Dauer</span>
-                    </span>
-                </div>
+                <x-stat icon="clock" :value="$recipe->duration_minutes ? $recipe->duration_minutes.' Min' : '–'"
+                    label="Dauer" />
 
-                <div class="stat">
-                    <span class="stat-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M13 2c.4 3.4 3.8 4.9 3.8 8.6A4.8 4.8 0 0 1 7.2 11c0-1.5.6-2.8 1.5-3.8.4 1.6 1.4 2.2 2 1.8.9-.7 1.9-3 2.3-7Z" />
-                            <path d="M12 21a3 3 0 0 0 3-3c0-1.9-3-3.6-3-3.6S9 16.1 9 18a3 3 0 0 0 3 3Z" />
-                        </svg>
-                    </span>
-                    <span class="stat-text">
-                        <span class="stat-value">{{ round($recipe->total_kcal / $servings) }}</span>
-                        <span class="stat-label">kcal / Portion</span>
-                    </span>
-                </div>
+                <x-stat icon="flame" :value="round($recipe->total_kcal / $servings)" label="kcal / Portion" />
 
-                <div class="stat">
-                    <span class="stat-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="3.2" />
-                            <path d="M5.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" />
-                        </svg>
-                    </span>
-                    <span class="stat-text">
-                        <span class="stat-value">{{ $recipe->servings ?? '–' }}</span>
-                        <span class="stat-label">
-                            {{ $recipe->servings == 1 ? 'Portion' : 'Portionen' }}
-                        </span>
-                    </span>
-                </div>
+                <x-stat icon="servings" :value="$recipe->servings ?? '–'"
+                    :label="$recipe->servings == 1 ? 'Portion' : 'Portionen'" />
             </div>
 
             @if($recipe->description)
-                <p class="detail-description">{{ $recipe->description }}</p>
+                <p class="page-lead">{{ $recipe->description }}</p>
             @endif
 
             @if($recipe->difficulty || $recipe->price_level || $recipe->diet_type)
-                <div class="detail-tags">
+                <div class="page-tags">
                     @if($recipe->difficulty)
-                        <span class="badge">
-                            Aufwand
-                            <strong>{{ $difficultyLabels[$recipe->difficulty] ?? $recipe->difficulty }}</strong>
-                        </span>
+                        <span class="badge">Aufwand <strong>{{ $recipe->difficulty_label }}</strong></span>
                     @endif
 
                     @if($recipe->price_level)
@@ -183,19 +106,16 @@
                     @endif
 
                     @if($recipe->diet_type)
-                        <span class="badge">
-                            Ernährung
-                            <strong>{{ $dietLabels[$recipe->diet_type] ?? $recipe->diet_type }}</strong>
-                        </span>
+                        <span class="badge">Ernährung <strong>{{ $recipe->diet_label }}</strong></span>
                     @endif
                 </div>
             @endif
-        </section>
+        </x-page-card>
 
-        <div class="detail-grid">
+        <div class="content-grid content-grid-split">
 
             {{-- Mobil zuerst (wie im Entwurf), auf dem Desktop rechts --}}
-            <div class="detail-col detail-col-side">
+            <div class="content-col content-col-side">
 
                 <section class="card panel">
                     <h2>Zutaten</h2>
@@ -255,7 +175,7 @@
                 </section>
             </div>
 
-            <div class="detail-col detail-col-main">
+            <div class="content-col content-col-main">
 
                 @if(! empty($steps))
                     <section class="card panel">
@@ -282,7 +202,7 @@
                 @if($recipe->source_url)
                     <section class="card panel">
                         <h2>Quelle</h2>
-                        <a class="source-link" href="{{ $recipe->source_url }}" target="_blank"
+                        <a class="panel-link" href="{{ $recipe->source_url }}" target="_blank"
                             rel="noopener noreferrer">{{ $recipe->source_url }}</a>
                     </section>
                 @endif
@@ -290,7 +210,7 @@
         </div>
 
         @if($canManage)
-            <div class="recipe-actions">
+            <div class="footer-actions">
                 <a href="{{ route('recipes.edit', $recipe) }}" class="btn">Rezept bearbeiten</a>
 
                 <form action="{{ route('recipes.destroy', $recipe) }}" method="POST"

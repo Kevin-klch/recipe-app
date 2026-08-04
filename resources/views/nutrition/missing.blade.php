@@ -1,110 +1,92 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
-    <title>Nährwerte ergänzen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nährwerte ergänzen | Meine Rezepte</title>
+
+    @include('partials.theme-init')
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/recipes-create.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/recipes-form.css') }}">
 </head>
+
 <body>
-<main class="container">
-    <a class="back-link" href="{{ route('recipes.create') }}">
-        ← Zurück zum Rezept
-    </a>
 
-    <form class="card form-card"
-          method="POST"
-          action="{{ route('nutrition.storeMissing') }}">
-        @csrf
+    <x-page-hero :back-url="route('recipes.create')" back-label="Zurück zum Rezept" symbol="🧾" />
 
-        <span class="header">Nährwerte ergänzen</span>
-        <p>
-            Für diese Zutaten fehlen noch Nährwerte.
-            Gib an, worauf sich die Werte beziehen.
-        </p>
+    <main class="container page-main">
 
-        <div class="form-grid">
-            @foreach($items as $index => $name)
-                <div class="form-group full">
-                    <h3>{{ $name }}</h3>
+        <x-page-card title="Nährwerte ergänzen"
+            :subtitle="count($items).' '.(count($items) === 1 ? 'Zutat ist' : 'Zutaten sind').' noch unbekannt'">
 
-                    <input type="hidden"
-                           name="items[{{ $index }}][name]"
-                           value="{{ $name }}">
+            <p class="page-lead">
+                Damit die Nährwerte des Rezepts berechnet werden können, fehlen noch diese
+                Angaben. Gib jeweils an, worauf sich die Werte beziehen.
+            </p>
+        </x-page-card>
 
-                    <div class="ingredients-row nutrition-row">
-                        <input class="input"
-                               type="number"
-                               step="0.01"
-                               name="items[{{ $index }}][reference_amount]"
-                               placeholder="Menge z.B. 100 oder 1"
-                               required>
+        <form method="POST" action="{{ route('nutrition.storeMissing') }}">
+            @csrf
 
-                        <select class="input"
-                                name="items[{{ $index }}][reference_unit]"
-                                required>
-                            <option value="">Einheit</option>
-                            <option value="g">g</option>
-                            <option value="kg">kg</option>
-                            <option value="ml">ml</option>
-                            <option value="l">l</option>
-                            <option value="TL">TL</option>
-                            <option value="EL">EL</option>
-                            <option value="Prise">Prise</option>
-                            <option value="Stück">Stück</option>
-                            <option value="Dose">Dose</option>
-                            <option value="Packung">Packung</option>
-                        </select>
+            <div class="content-grid">
+                <section class="card panel">
+                    <h2>Fehlende Angaben</h2>
 
-                        <input class="input"
-                               type="number"
-                               step="0.01"
-                               name="items[{{ $index }}][kcal]"
-                               placeholder="kcal"
-                               required>
-                    </div>
-
-                    <div class="ingredients-row nutrition-row">
-                        <input class="input"
-                               type="number"
-                               step="0.01"
-                               name="items[{{ $index }}][protein]"
-                               placeholder="Protein"
-                               required>
-
-                        <input class="input"
-                               type="number"
-                               step="0.01"
-                               name="items[{{ $index }}][carbs]"
-                               placeholder="Kohlenhydrate"
-                               required>
-
-                        <input class="input"
-                               type="number"
-                               step="0.01"
-                               name="items[{{ $index }}][fat]"
-                               placeholder="Fett"
-                               required>
-                    </div>
-
-                    <p style="margin-top: 8px; color: var(--muted); font-size: 14px;">
-                        Beispiel: Ei = 1 Stück = 78 kcal oder Reis = 100 g = 350 kcal
+                    <p class="field-hint">
+                        Beispiel: Ei = 1 Stück = 78 kcal, oder Reis = 100 g = 350 kcal.
+                        Die Einheit sollte zu der passen, die du im Rezept verwendest.
                     </p>
-                </div>
-            @endforeach
-        </div>
 
-        <div class="form-actions">
-            <a href="{{ route('recipes.create') }}" class="btn btn-secondary">
-                Abbrechen
-            </a>
+                    @foreach($items as $index => $name)
+                        <div class="nutrition-item-card">
+                            <h3>{{ $name }}</h3>
 
-            <button type="submit" class="btn">
-                Nährwerte speichern
-            </button>
-        </div>
-    </form>
-</main>
+                            <input type="hidden" name="items[{{ $index }}][name]" value="{{ $name }}">
+
+                            <div class="ingredients-row">
+                                <input class="input" type="number" step="0.01"
+                                    name="items[{{ $index }}][reference_amount]"
+                                    value="{{ old("items.$index.reference_amount") }}"
+                                    placeholder="Menge z.B. 100 oder 1" required>
+
+                                <select class="input" name="items[{{ $index }}][reference_unit]" required>
+                                    <option value="">Einheit</option>
+                                    @foreach(['g', 'kg', 'ml', 'l', 'TL', 'EL', 'Prise', 'Stück', 'Dose', 'Packung'] as $unit)
+                                        <option value="{{ $unit }}" @selected(old("items.$index.reference_unit") === $unit)>
+                                            {{ $unit }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <input class="input" type="number" step="0.01" name="items[{{ $index }}][kcal]"
+                                    value="{{ old("items.$index.kcal") }}" placeholder="kcal" required>
+                            </div>
+
+                            <div class="ingredients-row">
+                                <input class="input" type="number" step="0.01" name="items[{{ $index }}][protein]"
+                                    value="{{ old("items.$index.protein") }}" placeholder="Protein in g" required>
+
+                                <input class="input" type="number" step="0.01" name="items[{{ $index }}][carbs]"
+                                    value="{{ old("items.$index.carbs") }}" placeholder="Kohlenhydrate in g" required>
+
+                                <input class="input" type="number" step="0.01" name="items[{{ $index }}][fat]"
+                                    value="{{ old("items.$index.fat") }}" placeholder="Fett in g" required>
+                            </div>
+                        </div>
+                    @endforeach
+                </section>
+            </div>
+
+            <div class="footer-actions">
+                <button type="submit" class="btn">Nährwerte speichern</button>
+
+                <a class="btn btn-secondary" href="{{ route('recipes.create') }}">Abbrechen</a>
+            </div>
+        </form>
+    </main>
 </body>
+
 </html>

@@ -31,6 +31,16 @@
     --tile-4: #3a3025;
     --tile-5: #272d3a;
     --tile-6: #332a3a;
+
+    /* Grosse Panels (Seitenkopf, Login, Modal) – ein Verlauf mit Akzenttint */
+    --panel-bg:
+        linear-gradient(135deg, rgba(255, 193, 7, .12), transparent 35%),
+        linear-gradient(180deg, #292929, #1f1f1f);
+
+    /* Akzentflaechen fuer Badges und Hover */
+    --accent-soft-bg: rgba(255, 193, 7, .12);
+    --accent-soft-border: rgba(255, 193, 7, .22);
+    --hover-border: rgba(255, 193, 7, .30);
 }
 
 * {
@@ -112,6 +122,17 @@ p {
     background: var(--card-light);
     color: var(--text);
     border: 1px solid var(--border);
+}
+
+/* Lag vorher in recipes-show.css und fehlte damit der Admin-Seite,
+   die nur base.css laedt. */
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
 }
 
 .card {
@@ -209,49 +230,8 @@ label {
     font-weight: 700;
 }
 
-.login-card {
-    max-width: 460px;
-    margin: 90px auto;
-    padding: 32px;
-
-    border-radius: 32px;
-    background:
-        linear-gradient(135deg,
-            rgba(255, 193, 7, 0.12),
-            transparent 38%),
-        linear-gradient(180deg,
-            #292929,
-            #1f1f1f);
-
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-}
-
-.login-header {
-    margin-bottom: 28px;
-}
-
-.login-title {
-    display: block;
-    font-size: 42px;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.login-header p {
-    margin: 0;
-    color: var(--muted);
-}
-
-.login-card .form-group {
-    margin-bottom: 18px;
-}
-
-.login-card label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+/* Die frueheren .login-card-Regeln sind entfallen – die Anmeldung nutzt
+   jetzt .page-card page-card-narrow aus layout.css. */
 
 .remember-row {
     display: flex !important;
@@ -277,15 +257,6 @@ label {
     .header{
         font-size: 40px;
     }
-    .log
-    in-card {
-        margin: 40px auto;
-        padding: 24px;
-    }
-
-    .login-title {
-        font-size: 34px;
-    }
 
     .recipe-meta {
         margin-top: 20px;
@@ -300,10 +271,17 @@ label {
     margin-bottom: 18px;
 }
 
+.top-bar-actions,
 .hero-top-right {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+/* Im Kopf sitzt der Zurueck-Link in einer Flex-Reihe, sein eigener
+   Abstand nach unten stoert dort. */
+.top-bar .back-link {
+    margin-bottom: 0;
 }
 
 .info-button {
@@ -313,8 +291,8 @@ label {
     border: 1px solid var(--border);
     border-radius: 50%;
 
-    background: var(--card);
-    color: var(--primary);
+    background: var(--card-light);
+    color: var(--accent-text);
 
     font-size: 18px;
     font-weight: 700;
@@ -324,7 +302,7 @@ label {
 }
 
 .info-button:hover {
-    border-color: rgba(255, 193, 7, 0.3);
+    border-color: var(--hover-border);
     transform: translateY(-1px);
 }
 
@@ -351,17 +329,7 @@ label {
 
     border-radius: 28px;
 
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255, 193, 7, 0.08),
-            transparent 35%
-        ),
-        linear-gradient(
-            180deg,
-            #292929,
-            #1f1f1f
-        );
+    background: var(--panel-bg);
 
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
@@ -443,6 +411,14 @@ label {
     --tile-4: #ffecd9;
     --tile-5: #e8eefb;
     --tile-6: #f3e8fb;
+
+    --panel-bg:
+        linear-gradient(135deg, rgba(240, 160, 60, .14), transparent 38%),
+        linear-gradient(180deg, #ffffff, #fffaf3);
+
+    --accent-soft-bg: rgba(240, 160, 60, .14);
+    --accent-soft-border: rgba(240, 160, 60, .28);
+    --hover-border: rgba(240, 160, 60, .38);
 }
 
 .theme-light .card {
@@ -485,6 +461,11 @@ label {
     color: #b91c1c;
 }
 
+/* Das helle Rot des Schliessers verschwindet auf weissem Grund */
+.theme-light .modal-close {
+    color: #b91c1c;
+}
+
 /* =========================================================================
    Theme-Switch
    =========================================================================
@@ -497,6 +478,34 @@ label {
     border: 0;
     cursor: pointer;
     padding: 0;
+}
+
+/* Runde Flaeche fuer den Switch auf Seiten ohne Hero-Bild. Auf der
+   Rezeptseite uebernimmt das .hero-btn. */
+.chip-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+
+    display: inline-grid;
+    place-items: center;
+
+    background: var(--card-light);
+    color: var(--text);
+    border: 1px solid var(--border);
+
+    cursor: pointer;
+    transition: transform .18s ease, border-color .18s ease;
+}
+
+.chip-btn:hover {
+    border-color: var(--hover-border);
+    transform: translateY(-1px);
+}
+
+.chip-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .theme-toggle .icon-moon {

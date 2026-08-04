@@ -28,6 +28,30 @@ class Recipe extends Model
         'total_fat',
     ];
 
+    /**
+     * Beschriftungen fuer die in der DB englisch gespeicherten Werte.
+     * Unbekannte Werte werden unveraendert durchgereicht.
+     */
+    public function getDifficultyLabelAttribute(): ?string
+    {
+        return match ($this->difficulty) {
+            'easy' => 'Einfach',
+            'medium' => 'Mittel',
+            'hard' => 'Aufwendig',
+            default => $this->difficulty,
+        };
+    }
+
+    public function getDietLabelAttribute(): ?string
+    {
+        return match ($this->diet_type) {
+            'none' => 'Normal',
+            'vegetarian' => 'Vegetarisch',
+            'vegan' => 'Vegan',
+            default => $this->diet_type,
+        };
+    }
+
     public function getKcalPerServingAttribute()
     {
         return $this->servings

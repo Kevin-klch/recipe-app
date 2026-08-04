@@ -16,7 +16,14 @@ class RecipeController extends Controller
             ->take(10)
             ->get();
 
-        return view('home', compact('recipes'));
+        // Kennzahlen fuer die Titelkarte der Startseite
+        $stats = [
+            'recipes' => Recipe::count(),
+            'own' => Recipe::where('user_id', auth()->id())->count(),
+            'ingredients' => NutritionItem::count(),
+        ];
+
+        return view('home', compact('recipes', 'stats'));
     }
 
     public function index(Request $request)

@@ -1,0 +1,145 @@
+/* =========================================================================
+   Formularseiten – Rezept anlegen und bearbeiten, Nährwerte ergänzen,
+   Profile verwalten. Hero, Titelkarte und Panels kommen aus layout.css.
+   ========================================================================= */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+/* Volle Breite innerhalb des Rasters */
+.full {
+    grid-column: 1 / -1;
+}
+
+.field-hint {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: .8rem;
+    line-height: 1.5;
+}
+
+/* Der Hinweis direkt unter der Panel-Überschrift */
+.panel > .field-hint:first-of-type {
+    margin: -8px 0 16px;
+}
+
+.input-file {
+    padding: 11px 14px;
+    cursor: pointer;
+}
+
+/* ---------- Zutatenzeilen ---------- */
+
+.ingredients-wrapper {
+    display: grid;
+    gap: 12px;
+}
+
+.ingredients-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 12px;
+}
+
+/* ---------- Nährwerte ergänzen ---------- */
+
+.nutrition-item-card {
+    padding: 18px;
+    border-radius: 18px;
+
+    background: var(--card-light);
+    border: 1px solid var(--border);
+}
+
+.nutrition-item-card + .nutrition-item-card {
+    margin-top: 14px;
+}
+
+.nutrition-item-card h3 {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    color: var(--accent-text);
+}
+
+.nutrition-item-card .ingredients-row + .ingredients-row {
+    margin-top: 12px;
+}
+
+/* ---------- Profile verwalten ---------- */
+
+.user-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.user-row:first-child {
+    padding-top: 0;
+}
+
+.user-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.user-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    font-weight: 700;
+}
+
+.user-mail {
+    color: var(--muted);
+    font-size: .88rem;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Mobil ---------- */
+
+@media (max-width: 700px) {
+    .form-grid,
+    .ingredients-row {
+        grid-template-columns: 1fr;
+    }
+
+    .user-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-row form,
+    .user-row .btn {
+        width: 100%;
+    }
+}
